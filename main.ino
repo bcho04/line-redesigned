@@ -40,13 +40,13 @@ void move(int motor, int speed, int direction){
 
 void stop(){
   //enable standby
-  digitalWrite(STANDBY, LOW);
+  digitalWrite(STANDBY, LOW); // Stop everything if this happens
 }
 
 void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
-  pinMode(INF_LEFT_PIN, INPUT);
+  pinMode(INF_LEFT_PIN, INPUT); // Define pin modes
   pinMode(INF_MID_PIN, INPUT);
   pinMode(INF_RIGHT_PIN, INPUT);
   pinMode(STANDBY, OUTPUT);
@@ -60,9 +60,9 @@ void setup() {
 }
 
 void loop() {
-  bool INF_0 = !digitalRead(INF_LEFT_PIN);
-  bool INF_1 = !digitalRead(INF_MID_PIN);
-  bool INF_2 = !digitalRead(INF_RIGHT_PIN);
+  bool INF_0 = !digitalRead(INF_LEFT_PIN); // Read from the infrared sensor 
+  bool INF_1 = !digitalRead(INF_MID_PIN); // ""
+  bool INF_2 = !digitalRead(INF_RIGHT_PIN); // ""
   int INF_C = INF_0*4+INF_1*2+INF_2; // Combined state condenses code
   float DIR; // -1 is left, 0 is straight, 1 is right
   int M_LEFT;
@@ -75,26 +75,26 @@ void loop() {
 
   if(DIR == 1){
     M_LEFT = 255;
-    M_RIGHT = 128;
+    M_RIGHT = 0; // 128
   }
   if(DIR == 0.5){
     M_LEFT = 255;
-    M_RIGHT = 192;
+    M_RIGHT = 128; // 192
   }
   if(DIR == 0){
     M_LEFT = 255;
     M_RIGHT = 255;
   }
   if(DIR == -0.5){
-    M_LEFT = 192;
+    M_LEFT = 128; // 192
     M_RIGHT = 255;
   }
   if(DIR == -1){
-    M_LEFT = 128;
+    M_LEFT = 0; // 128
     M_RIGHT = 255;
   }
 
-  move(1, M_LEFT, 1);
+  move(1, M_LEFT, 1); // Moves the motor
   move(2, M_RIGHT, 1);
   // print out the value you read:
   Serial.println(String(INF_0) + " " + String(INF_1) + " " + String(INF_2) + " => " + String(INF_C) + " => " + String(DIR) + " => " + String(M_LEFT) + " " + String(M_RIGHT));
